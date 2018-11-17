@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="express-site"></context:component-scan>
+	<!-- <aop:aspectj-autoproxy></aop:aspectj-autoproxy> 应用注解时应该用这个标签 -->
+	<context:property-placeholder
+		location="classpath:jdbc_mysql.properties" />
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+   destroy-method="close"> 
+  <property name="driverClassName" value="${jdbc.driverClass}" /> 
+  <property name="url" value="${jdbc.url}" /> 
+  <property name="username" value="${jdbc.username}" /> 
+  <property name="password" value="${jdbc.password}" /> 
+  <!-- 配置初始化大小、最小、最大 --> 
+  <property name="initialSize" value="1" /> 
+  <property name="minIdle" value="1" /> 
+  <property name="maxActive" value="10" />
+
+  <!-- 配置获取连接等待超时的时间 --> 
+  <property name="maxWait" value="10000" />
+
+  <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 --> 
+  <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+  <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 --> 
+  <property name="minEvictableIdleTimeMillis" value="300000" />
+
+<!--   <property name="testWhileIdle" value="true" />
+
+  这里建议配置为TRUE，防止取到的连接不可用 
+  <property name="testOnBorrow" value="true" /> 
+  <property name="testOnReturn" value="false" />
+
+  打开PSCache，并且指定每个连接上PSCache的大小 
+  <property name="poolPreparedStatements" value="true" /> 
+  <property name="maxPoolPreparedStatementPerConnectionSize" 
+   value="20" />
+
+  这里配置提交方式，默认就是TRUE，可以不用配置
+
+  <property name="defaultAutoCommit" value="true" />
+
+  验证连接有效与否的SQL，不同的数据配置不同 
+  <property name="validationQuery" value="select 1 " /> 
+  <property name="filters" value="stat" /> 
+  <property name="proxyFilters"> 
+   <list> 
+    <ref bean="logFilter" /> 
+   </list> 
+  </property>  -->
+ </bean>
+	
+	
+<!-- session工厂 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置文件 -->
+		<property name="configLocation"
+			value="classpath:sqlMapConfig.xml"></property>
+	</bean>
+
+	<!-- 3.增强型mapper开发，自动扫描 -->
+	<!-- 不用给id，因为扫描会扫描出很多mapper，只用通过接口获取就行 -->
+	<bean 
+		class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 不用配置session工厂，会自动扫描所有的bean -->
+		<!-- 配置扫描哪个包 -->
+		<property name="basePackage" value="mapper"></property>
+	</bean>
+	
+	<!-- 设置注解实现事务管理 -->
+	  <!-- 1.配置事务管理器  -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 2.开启事务通知 -->
+	<tx:annotation-driven/>
+	<!-- 3.在需要使用事务的方法所在类上面加上transactional（这里是userservice） -->   
+  
+  <!-- 
+ 配置solr
+实例化HttpSolrServer对象
+<bean id="httpSolrClient" class="org.apache.solr.client.solrj.impl.HttpSolrClient">
+    构造注入 
+    <constructor-arg name="builder" ref="builder"></constructor-arg>
+</bean>
+<bean id="builder" class="org.apache.solr.client.solrj.impl.HttpSolrClient.Builder">
+	<constructor-arg name="baseSolrUrl" value="http://127.0.0.1:8983/solr/newcore">
+	</constructor-arg>
+</bean>
+ -->
+  
+</beans>

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+<mvc:annotation-driven validator="validator">
+<!-- 配置参数转换器，这里是json转换 -->
+<mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+</mvc:annotation-driven>
+<!--  conversion-service="conversionService" -->
+
+<!--  参数转换器 
+<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+<property name="converters">
+<list>
+日期转换器
+<bean class="converter.DateConverter"></bean>
+</list>
+</property>
+</bean> -->
+
+
+<!-- 配置视图解析器 -->
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<!-- 配置路径前缀后缀 -->
+<!-- <property name="prefix" value="/WEB-INF/jsp/" />
+<property name="suffix" value=".jsp" /> -->
+</bean>
+
+
+<!-- 校验器 -->
+<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+<!-- 校验器类 -->
+<property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+<!-- 错误信息类 -->
+<property name="validationMessageSource" ref="messageSource"></property>
+</bean>
+<!-- 错误信息配置文件 -->
+<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+<!-- 资源文件名 -->
+<property name="basenames">
+<list>
+<value>classpath:CustomValidationMessages</value>
+</list>
+</property>
+<!-- 缓存时间 -->
+<property name="cacheSeconds" value="120"></property>
+<property name="defaultEncoding" value="utf-8"></property>
+</bean>
+
+<!-- 异常处理器 -->
+<!-- 编写一个异常处理器类实现org.springframework.web.portlet.HandlerExceptionResolver接口，然后配置在下面写上class即可 -->
+<!-- <bean class=""></bean> -->
+
+<!-- 文件上传 -->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<!-- 设置文件大小 -->
+<property name="maxUploadSize">
+<value>5242880</value>
+</property>
+<property name="defaultEncoding"><value>UTF-8</value></property>
+</bean>
+
+<!-- 当前端控制器配置url为/时，需配置静态映射 ,下面是对js目录下的文件的映射，其他同理-->
+<!-- <mvc:resources location="/js/" mapping="/js/**"></mvc:resources> -->
+
+<!-- 拦截器 -->
+<!-- <mvc:interceptors> -->
+<!-- 多个拦截器，顺序执行 -->
+<!-- <mvc:interceptor>
+<mvc:mapping path="/**"/>
+<bean class="interceptor.HandlerInterceptor1"></bean>
+</mvc:interceptor>
+</mvc:interceptors> -->
+</beans>
