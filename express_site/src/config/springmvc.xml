@@ -17,6 +17,11 @@
 </mvc:annotation-driven>
 <!--  conversion-service="conversionService" -->
 
+<context:component-scan base-package="com.express">
+		<!-- springmvc子容器不掃描service -->
+	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
 <!--  参数转换器 
 <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 <property name="converters">
