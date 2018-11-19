@@ -5,8 +5,18 @@ public class User {
 	private String username;
 	private String password;
 	private String name;
+	private String sex;
 	private String type;
 	private String profile;
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
 
 	public Integer getId() {
 		return id;
@@ -18,8 +28,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", type="
-				+ type + ", profile=" + profile + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", sex="
+				+ sex + ", type=" + type + ", profile=" + profile + "]";
 	}
 
 	public String getUsername() {
