@@ -81,7 +81,7 @@
 		class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- 不用配置session工厂，会自动扫描所有的bean -->
 		<!-- 配置扫描哪个包 -->
-		<property name="basePackage" value="mapper"></property>
+		<property name="basePackage" value="com.express.mapper"></property>
 	</bean>
 	
 	<!-- 设置注解实现事务管理 -->
