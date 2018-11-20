@@ -11,8 +11,8 @@ import com.express.pojo.User;
 @Controller("/express_site")
 public class UserController {
 @RequestMapping("/login")
-	public @ResponseBody LoginResult login(String name) {
-	    System.out.println(name);
+	public @ResponseBody LoginResult login(@RequestBody User user) {
+	    System.out.println(user);
 	
 	
 		return null;
