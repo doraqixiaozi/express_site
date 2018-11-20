@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.express.mapper.UserMapper">
+<!--   private Integer id;
+  private String username;
+  private String password;
+  private String name;
+  private String type;
+private String profile; -->
+<insert id="addUser" parameterType="User">
+insert into user(username,password,name,type,profile,sex) values(#{user.username},#{user.password},#{user.name},#{user.type},#{user.profile},#{user.sex})
+<selectKey resultType="Integer" order="AFTER" keyProperty="user.id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+</insert>
+
+<select id="selectUserById" parameterType="Integer" resultType="User">
+select * from user where id=#{value}
+</select>
+
+<select id="selectFriendsById" parameterType="Integer" resultType="User">
+select * from user where id in(select f_id from friend where s_id=#{value})
+</select>
+</mapper>
