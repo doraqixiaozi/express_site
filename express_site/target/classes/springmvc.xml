@@ -75,8 +75,11 @@
 </bean>
 
 <!-- 当前端控制器配置url为/时，需配置静态映射 ,下面是对js目录下的文件的映射，其他同理-->
-<!-- <mvc:resources location="/js/" mapping="/js/**"></mvc:resources> -->
-
+<!-- <mvc:resources location="/js/" mapping="/js/**"></mvc:resources>
+<mvc:resources location="/css/" mapping="/css/**"></mvc:resources>
+<mvc:resources location="/fonts/" mapping="/fonts/**"></mvc:resources>
+<mvc:resources location="/img/" mapping="/img/**"></mvc:resources> -->
+<!-- <mvc:resources location="/favicon.ico" mapping="/favicon.ico"></mvc:resources> -->
 <!-- 拦截器 -->
 <!-- <mvc:interceptors> -->
 <!-- 多个拦截器，顺序执行 -->

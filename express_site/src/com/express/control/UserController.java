@@ -8,14 +8,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.express.pojo.LoginResult;
 import com.express.pojo.User;
 
-@Controller
+@Controller("/express_site")
 public class UserController {
 @RequestMapping("/login")
-	public @ResponseBody LoginResult login(@RequestBody User user) {
-	    System.out.println(user);
+	public @ResponseBody LoginResult login(String name) {
+	    System.out.println(name);
 	
 	
 		return null;
 		
 	}
+
+@RequestMapping("/signup")
+public @ResponseBody LoginResult signup(@RequestBody User user) {
+    System.out.println(user);
+
+
+	return null;
+	
+}
 }
