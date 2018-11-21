@@ -6,6 +6,14 @@ public class LoginResult {
 	private User user;
 	private List<User> friends;
 	private List<Message> messages;
+  private List<String> errors;
+	public List<String> getErrors() {
+	return errors;
+}
+
+public void setErrors(List<String> errors) {
+	this.errors = errors;
+}
 
 	@Override
 	public String toString() {

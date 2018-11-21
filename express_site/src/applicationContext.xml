@@ -16,7 +16,7 @@
 	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	
-	<!-- <aop:aspectj-autoproxy></aop:aspectj-autoproxy> 应用注解时应该用这个标签 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy> 应用注解时应该用这个标签
 	<context:property-placeholder
 		location="classpath:jdbc_mysql.properties" />
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"

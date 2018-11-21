@@ -2,10 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.express.mapper.UserMapper">
 <insert id="addUser" parameterType="User">
-insert into user(email,password,name,type,profile,sex) values(#{user.email},#{user.password},#{user.name},#{user.type},#{user.profile},#{user.sex})
-<selectKey resultType="Integer" order="AFTER" keyProperty="user.id">
-            SELECT LAST_INSERT_ID() AS id
-        </selectKey>
+insert into user(email,password,name,type,sex) values(#{user.email},#{user.password},#{user.name},#{user.type},#{user.sex})
 </insert>
 
 <select id="selectUserById" parameterType="Integer" resultType="User">
@@ -14,5 +11,20 @@ select * from user where id=#{value}
 
 <select id="selectFriendsById" parameterType="Integer" resultType="User">
 select * from user where id in(select f_id from friend where s_id=#{value})
+</select>
+
+<select id="login" parameterType="LoginForm" resultType="User">
+select * from user 
+<where>
+email=#{email} and password=#{password}
+</where>
+</select>
+
+<select id="getSimilarEmail" parameterType="String" resultType="String">
+select email from user
+<where>
+email like '${value}%'
+</where>
+
 </select>
 </mapper>

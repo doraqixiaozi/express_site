@@ -53,7 +53,7 @@
 <!-- 资源文件名 -->
 <property name="basenames">
 <list>
-<value>classpath:CustomValidationMessages</value>
+<value>classpath:validationMessageSource</value>
 </list>
 </property>
 <!-- 缓存时间 -->
