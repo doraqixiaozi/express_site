@@ -42,12 +42,14 @@ public class UserController {
 		}
 		System.out.println(loginForm);
 		login = userService.login(loginForm);
+		System.out.println(login);
 		return login;
 
 	}
 
-	@RequestMapping("/signup")
+	@RequestMapping("/signin")
 	public @ResponseBody String signup(@Validated @RequestBody SignUpForm user, BindingResult result) {
+		System.out.println(user);
 		if (result.hasErrors()) {
 			List<ObjectError> list = result.getAllErrors();
 			for (ObjectError objectError : list) {
@@ -62,6 +64,7 @@ public class UserController {
 @RequestMapping("/similarEmail")
 	public @ResponseBody List<String> getSimilarEmail(@RequestBody String email) {
 	List<String> similarEmail = userService.getSimilarEmail(email);	
+	System.out.println(similarEmail);
 		return similarEmail;
 	}
 }

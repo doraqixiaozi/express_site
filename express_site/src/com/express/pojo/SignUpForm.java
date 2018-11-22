@@ -11,11 +11,11 @@ public class SignUpForm {
 	@Size(min=6,max=16,message="密码长度不合规")
 	@Pattern(regexp = "(\\w*((\\d+[a-zA-z]+)|([a-zA-z]+\\d+))\\w*)",message="密码组成不合规")
 	private String password;
-	@NotNull(message="{items.user.null}")
+	@NotNull(message="name should {items.user.null}")
 	private String name;
-	@NotNull(message="{items.user.null}")
+	@NotNull(message="sex should {items.user.null}")
 	private String sex;
-	@NotNull(message="{items.user.null}")
+	@NotNull(message="type should {items.user.null}")
 	private String type;
 	public String getEmail() {
 		return email;

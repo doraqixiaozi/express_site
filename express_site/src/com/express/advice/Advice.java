@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.aopalliance.intercept.Joinpoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -20,8 +21,8 @@ import sun.misc.BASE64Encoder;
 @Component
 public class Advice {
 //密码md5加密
-	@Before("execution(public * com.express.service.UserServiceImpl.doSignup(..)) || execution(public * com.express.service.UserServiceImpl.doLogin(..))")
-	public void passwordProcess(ProceedingJoinPoint point) {
+	@Around("execution(public * com.express.service.UserServiceImpl.doSignup(..)) || execution(public * com.express.service.UserServiceImpl.doLogin(..))")
+	public Object passwordProcess(ProceedingJoinPoint point) throws Throwable {
 		Object[] args = point.getArgs();
 		if (args.length == 1) {
 			if (args[0] != null) {
@@ -41,6 +42,8 @@ public class Advice {
 				}
 			}
 		}
+		Object proceed = point.proceed();
+		return proceed;
 	}
 
 private String makeMD5(String password, String realPassword) {

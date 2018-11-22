@@ -15,10 +15,12 @@ public void setErrors(List<String> errors) {
 	this.errors = errors;
 }
 
+
+
 	@Override
-	public String toString() {
-		return "LoginResult [user=" + user + ", friends=" + friends + ", messages=" + messages + "]";
-	}
+public String toString() {
+	return "LoginResult [user=" + user + ", friends=" + friends + ", messages=" + messages + ", errors=" + errors + "]";
+}
 
 	public User getUser() {
 		return user;
