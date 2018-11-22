@@ -6,15 +6,18 @@ insert into user(email,password,name,type,sex) values(#{user.email},#{user.passw
 </insert>
 
 <select id="selectUserById" parameterType="Integer" resultType="User">
-select * from user where id=#{value}
+select id,email,name,sex,type,profile from user where id=#{value}
 </select>
 
-<select id="selectFriendsById" parameterType="Integer" resultType="User">
-select * from user where id in(select f_id from friend where s_id=#{value})
+<select id="selectFriendsBysId" parameterType="Integer" resultType="Friend">
+select id,email,name,sex,type,profile from user where id in(select f_id from friend where s_id=#{value})
+</select>
+<select id="selectFriendsByfId" parameterType="Integer" resultType="Friend">
+select id,email,name,sex,type,profile from user where id in(select s_id from friend where f_id=#{value})
 </select>
 
 <select id="login" parameterType="LoginForm" resultType="User">
-select * from user 
+select id,email,name,sex,type,profile from user 
 <where>
 email=#{email} and password=#{password}
 </where>

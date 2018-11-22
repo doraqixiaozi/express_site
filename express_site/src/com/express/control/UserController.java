@@ -1,5 +1,6 @@
 package com.express.control;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.express.pojo.LoginForm;
@@ -18,6 +20,9 @@ import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
 import com.express.service.MessageService;
 import com.express.service.UserService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class UserController {
@@ -48,7 +53,6 @@ public class UserController {
 
 	@RequestMapping("/signin")
 	public @ResponseBody String signup(@Validated @RequestBody SignUpForm user, BindingResult result) {
-		System.out.println(user);
 		if (result.hasErrors()) {
 			List<ObjectError> list = result.getAllErrors();
 			for (ObjectError objectError : list) {
@@ -56,12 +60,13 @@ public class UserController {
 			}
 			return "fail";
 		}
-		System.out.println(user);
 		userService.doSignup(user);
 		return "success";
 	}
 @RequestMapping("/similarEmail")
-	public @ResponseBody List<String> getSimilarEmail(@RequestBody String email) {
+	public @ResponseBody List<String> getSimilarEmail(@RequestBody SignUpForm user){	
+    String email=user.getEmail();
+	System.out.println(email);
 	List<String> similarEmail = userService.getSimilarEmail(email);	
 	System.out.println(similarEmail);
 		return similarEmail;

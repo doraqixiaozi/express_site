@@ -4,23 +4,16 @@ import java.util.List;
 
 public class LoginResult {
 	private User user;
-	private List<User> friends;
-	private List<Message> messages;
-  private List<String> errors;
+	private List<Friend> friends;
+	private List<String> errors;
+
 	public List<String> getErrors() {
-	return errors;
-}
+		return errors;
+	}
 
-public void setErrors(List<String> errors) {
-	this.errors = errors;
-}
-
-
-
-	@Override
-public String toString() {
-	return "LoginResult [user=" + user + ", friends=" + friends + ", messages=" + messages + ", errors=" + errors + "]";
-}
+	public void setErrors(List<String> errors) {
+		this.errors = errors;
+	}
 
 	public User getUser() {
 		return user;
@@ -30,19 +23,17 @@ public String toString() {
 		this.user = user;
 	}
 
-	public List<User> getFriends() {
+	public List<Friend> getFriends() {
 		return friends;
 	}
 
-	public void setFriends(List<User> friends) {
+	public void setFriends(List<Friend> friends) {
 		this.friends = friends;
 	}
 
-	public List<Message> getMessages() {
-		return messages;
+	@Override
+	public String toString() {
+		return "LoginResult [user=" + user + ", friends=" + friends + ", errors=" + errors + "]";
 	}
 
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
 }
