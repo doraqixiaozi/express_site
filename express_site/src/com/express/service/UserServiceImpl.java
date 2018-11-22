@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     usermapper.addUser(user);
 	}
 	@Override
-	public LoginResult login(LoginForm loginForm) {
+	public LoginResult login(LoginForm loginForm) {		
 		LoginResult result=new LoginResult();
 		List<String> errors=new ArrayList<>();
 	    User user = usermapper.login(loginForm);

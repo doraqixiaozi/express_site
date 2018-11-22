@@ -21,7 +21,7 @@ import sun.misc.BASE64Encoder;
 @Component
 public class Advice {
 //密码md5加密
-	@Around("execution(public * com.express.service.UserServiceImpl.doSignup(..)) || execution(public * com.express.service.UserServiceImpl.doLogin(..))")
+	@Around("execution(public * com.express.service.UserServiceImpl.doSignup(..)) || execution(public * com.express.service.UserServiceImpl.login(..))")
 	public Object passwordProcess(ProceedingJoinPoint point) throws Throwable {
 		Object[] args = point.getArgs();
 		if (args.length == 1) {
