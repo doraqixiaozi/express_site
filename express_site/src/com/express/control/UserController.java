@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.express.pojo.LoginForm;
 import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
-import com.express.pojo.User;
 import com.express.service.MessageService;
 import com.express.service.UserService;
 

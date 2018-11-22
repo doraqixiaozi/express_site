@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.express.pojo.LoginForm;
-import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
 import com.express.pojo.User;
 

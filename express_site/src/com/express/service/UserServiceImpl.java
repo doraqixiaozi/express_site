@@ -15,7 +15,6 @@ import com.express.pojo.LoginResult;
 import com.express.pojo.Message;
 import com.express.pojo.SignUpForm;
 import com.express.pojo.User;
-import com.sun.mail.handlers.message_rfc822;
 
 @Service
 @Transactional
