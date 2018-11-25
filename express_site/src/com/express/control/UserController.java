@@ -63,12 +63,12 @@ public class UserController {
 		userService.doSignup(user);
 		return "success";
 	}
-@RequestMapping("/similarEmail")
-	public @ResponseBody List<String> getSimilarEmail(@RequestBody SignUpForm user){	
-    String email=user.getEmail();
-	System.out.println(email);
-	List<String> similarEmail = userService.getSimilarEmail(email);	
-	System.out.println(similarEmail);
+
+	@RequestMapping("/similarEmail")
+	public @ResponseBody List<String> getSimilarEmail(@RequestBody SignUpForm user) {
+		String email = user.getEmail();
+		user = null;
+		List<String> similarEmail = userService.getSimilarEmail(email);
 		return similarEmail;
 	}
 }

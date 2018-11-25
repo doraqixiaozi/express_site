@@ -44,20 +44,22 @@ public class UserServiceImpl implements UserService {
 		List<Friend> friends2 = usermapper.selectFriendsByfId(user.getId());
 		friends.addAll(friends2);
 		List<Message> messages = messagemapper.selectNewMessages(user.getId());
-		//为每个朋友添加消息
-		if (!friends.isEmpty()&&!messages.isEmpty()) {
+		// 为每个朋友添加消息
+		if (!friends.isEmpty() && !messages.isEmpty()) {
 			for (Friend friend : friends) {
-				List<Message> list=null;
-              for (Message message : messages) {
-				if (friend.getId()==message.getFrom_id()) {
-					if (list==null) {
-						list=new ArrayList<>();
+				if (!messages.isEmpty()) {
+					List<Message> list = null;
+					for (Message message : messages) {
+						if (friend.getId() == message.getFrom_id()) {
+							if (list == null) {
+								list = new ArrayList<>();
+							}
+							list.add(message);
+						}
 					}
-					list.add(message);
-				}
-			}
-              messages.removeAll(list);
-              friend.setMessages(list);
+					messages.removeAll(list);
+					friend.setMessages(list);
+				}				
 			}
 		}
 		result.setFriends(friends);
@@ -67,7 +69,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<String> getSimilarEmail(String email) {
-
+		if (email == null || email.trim().equals("")) {
+			return null;
+		}
 		return usermapper.getSimilarEmail(email);
 	}
 
