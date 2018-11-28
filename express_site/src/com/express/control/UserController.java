@@ -1,10 +1,10 @@
 package com.express.control;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -12,7 +12,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.express.pojo.LoginForm;
@@ -20,9 +19,6 @@ import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
 import com.express.service.MessageService;
 import com.express.service.UserService;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class UserController {
@@ -32,7 +28,7 @@ public class UserController {
 	private MessageService messageService;
 
 	@RequestMapping("/login")
-	public @ResponseBody LoginResult login(@Validated @RequestBody LoginForm loginForm, BindingResult result) {
+	public @ResponseBody LoginResult login(@Validated @RequestBody LoginForm loginForm, BindingResult result,HttpSession session) {
 		List<String> errors = new ArrayList<>();
 		LoginResult login = new LoginResult();
 		if (result.hasErrors()) {
@@ -46,6 +42,7 @@ public class UserController {
 		}
 		System.out.println(loginForm);
 		login = userService.login(loginForm);
+		session.setAttribute("user", login.getUser());
 		System.out.println(login);
 		return login;
 

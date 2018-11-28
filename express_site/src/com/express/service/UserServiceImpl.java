@@ -48,12 +48,12 @@ public class UserServiceImpl implements UserService {
 		if (!friends.isEmpty() && !messages.isEmpty()) {
 			for (Friend friend : friends) {
 				if (!messages.isEmpty()) {
-					List<Message> list = null;
+					List<Message> list = new ArrayList<>();
 					for (Message message : messages) {
+						/*if (list==null) {
+							list=new ArrayList<>(); 
+						}*/
 						if (friend.getId() == message.getFrom_id()) {
-							if (list == null) {
-								list = new ArrayList<>();
-							}
 							list.add(message);
 						}
 					}
