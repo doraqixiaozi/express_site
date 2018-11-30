@@ -1,11 +1,15 @@
 package com.express.control;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -13,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.express.pojo.LoginForm;
 import com.express.pojo.LoginResult;
@@ -51,15 +56,38 @@ public class UserController {
 	}
 
 	@RequestMapping("/signin")
-	public @ResponseBody String signup(@Validated @RequestBody SignUpForm user, BindingResult result) {
+	public @ResponseBody String signup(@Validated SignUpForm user, BindingResult result,MultipartFile multfile
+,HttpServletRequest request) {
 		if (result.hasErrors()) {
 			List<ObjectError> list = result.getAllErrors();
 			for (ObjectError objectError : list) {
 				System.out.println(objectError.getDefaultMessage());
 			}
-			return "fail";
+			return "error";
 		}
-		userService.doSignup(user);
+		//重复校验
+		List<String> similarEmail = userService.getSimilarEmail(user.getEmail());
+		for (String string : similarEmail) {
+			if (user.getEmail().equals(string)) {
+				return "user has exist";
+			}
+		}				
+		try {
+			try {
+				userService.doSignup(user,multfile,request);
+			} catch (IllegalStateException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				return "unkown error";
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+				return "not a image";
+			}
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return "user has exist";
+		}		
 		return "success";
 	}
 
@@ -92,4 +120,5 @@ public class UserController {
      userService.makeFriends(s_id,f_id);
      return "success";
 	}
+	
 }

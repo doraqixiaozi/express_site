@@ -17,6 +17,13 @@ public class SignUpForm {
 	private String sex;
 	@NotNull(message="type should {items.user.null}")
 	private String type;
+	private String profile;
+	public String getProfile() {
+		return profile;
+	}
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -26,10 +33,11 @@ public class SignUpForm {
 	public String getPassword() {
 		return password;
 	}
+
 	@Override
 	public String toString() {
 		return "SignUpForm [email=" + email + ", password=" + password + ", name=" + name + ", sex=" + sex + ", type="
-				+ type + "]";
+				+ type + ", profile=" + profile + "]";
 	}
 	public void setPassword(String password) {
 		this.password = password;
