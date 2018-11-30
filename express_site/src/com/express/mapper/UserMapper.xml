@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.express.mapper.UserMapper">
-<insert id="addUser" parameterType="User">
-insert into user(email,password,name,type,sex) values(#{user.email},#{user.password},#{user.name},#{user.type},#{user.sex})
-</insert>
+	<insert id="addUser" parameterType="User">
+		insert into user(email,password,name,type,sex)
+		values(#{user.email},#{user.password},#{user.name},#{user.type},#{user.sex})
+	</insert>
 
-<select id="selectUserById" parameterType="Integer" resultType="User">
-select id,email,name,sex,type,profile from user where id=#{value}
-</select>
+	<select id="selectUserById" parameterType="Integer"
+		resultType="User">
+		select id,email,name,sex,type,profile from user where id=#{value}
+	</select>
 
-<select id="selectFriendsBysId" parameterType="Integer" resultType="Friend">
-select id,email,name,sex,type,profile from user where id in(select f_id from friend where s_id=#{value})
-</select>
-<select id="selectFriendsByfId" parameterType="Integer" resultType="Friend">
-select id,email,name,sex,type,profile from user where id in(select s_id from friend where f_id=#{value})
-</select>
+	<select id="selectFriendsBysId" parameterType="Integer"
+		resultType="Friend">
+		select id,email,name,sex,type,profile from user where id in(select f_id from
+		friend where s_id=#{value})
+	</select>
+	<select id="selectFriendsByfId" parameterType="Integer"
+		resultType="Friend">
+		select id,email,name,sex,type,profile from user where id in(select s_id from
+		friend where f_id=#{value})
+	</select>
 
-<select id="login" parameterType="LoginForm" resultType="User">
-select id,email,name,sex,type,profile from user 
-<where>
-email=#{email} and password=#{password}
-</where>
-</select>
+	<select id="login" parameterType="LoginForm" resultType="User">
+		select id,email,name,sex,type,profile from user
+		<where>
+			email=#{email} and password=#{password}
+		</where>
+	</select>
 
-<select id="getSimilarEmail" parameterType="String" resultType="String">
-select email from user
-<where>
-email like '${value}%'
-</where>
+	<select id="getSimilarEmail" parameterType="String"
+		resultType="String">
+		select email from user
+		<where>
+			email like '${value}%'
+		</where>
+	</select>
 
-</select>
+	<select id="selectUserByEmail" parameterType="String"
+		resultType="User">
+		select id,email,name,sex,type,profile from user where email=#{value}
+	</select>
+
+	<insert id="makeFriends" parameterType="Integer">
+		insert into friend(s_id,f_id) values(#{s_id},#{f_id})
+	</insert>
 </mapper>

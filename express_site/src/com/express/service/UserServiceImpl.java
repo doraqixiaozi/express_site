@@ -75,4 +75,15 @@ public class UserServiceImpl implements UserService {
 		return usermapper.getSimilarEmail(email);
 	}
 
+	@Override
+	public User searchfriend(String email) {
+		return  usermapper.selectUserByEmail(email);
+	}
+
+	@Override
+	public void makeFriends(Integer s_id, Integer f_id) {
+		usermapper.makeFriends(s_id,f_id);
+		System.out.println("sid="+s_id+" fid="+f_id);
+	}
+
 }

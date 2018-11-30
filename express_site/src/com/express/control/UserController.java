@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.express.pojo.LoginForm;
 import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
+import com.express.pojo.User;
 import com.express.service.MessageService;
 import com.express.service.UserService;
+import com.sun.net.httpserver.Authenticator.Success;
 
 @Controller
 public class UserController {
@@ -62,10 +64,32 @@ public class UserController {
 	}
 
 	@RequestMapping("/similarEmail")
-	public @ResponseBody List<String> getSimilarEmail(@RequestBody SignUpForm user) {
-		String email = user.getEmail();
-		user = null;
+	public @ResponseBody List<String> getSimilarEmail(@RequestBody SignUpForm form) {
+		String email = form.getEmail();
+		form = null;
 		List<String> similarEmail = userService.getSimilarEmail(email);
 		return similarEmail;
+	}
+	@RequestMapping("/searchfriend")
+	public @ResponseBody User searchfriend(@RequestBody SignUpForm form) {
+		String email = form.getEmail();
+		form=null;
+		User user = userService.searchfriend(email);
+		return user;
+	}
+	
+	@RequestMapping("/addfriend")
+	public @ResponseBody String addfriend(@RequestBody User user,HttpSession session) {
+     Integer f_id=user.getId();
+     user = (User) session.getAttribute("user");
+     if (user == null) {
+		return "please login first";
+	}
+     Integer s_id=user.getId();     
+     if (s_id==f_id) {
+		return "you can not add yourself as friend";
+	}
+     userService.makeFriends(s_id,f_id);
+     return "success";
 	}
 }

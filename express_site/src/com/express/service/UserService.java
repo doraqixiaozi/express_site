@@ -5,6 +5,7 @@ import java.util.List;
 import com.express.pojo.LoginForm;
 import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
+import com.express.pojo.User;
 
 
 public interface UserService {
@@ -12,4 +13,6 @@ public interface UserService {
 	public void doSignup(SignUpForm user);
 public LoginResult login(LoginForm loginForm);
 public List<String> getSimilarEmail(String email);
+public User searchfriend(String email);
+public void makeFriends(Integer s_id, Integer f_id);
 }
