@@ -16,7 +16,7 @@ import com.express.pojo.User;
 
 public interface UserService {
 
-	public void doSignup(SignUpForm user, MultipartFile multfile, HttpServletRequest request) throws DataAccessException, IllegalStateException, IOException;
+	public void doSignup(SignUpForm user, MultipartFile avatr, HttpServletRequest request) throws DataAccessException, IllegalStateException, IOException;
 public LoginResult login(LoginForm loginForm);
 public List<String> getSimilarEmail(String email);
 public User searchfriend(String email);

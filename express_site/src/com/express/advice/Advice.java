@@ -19,24 +19,22 @@ public class Advice {
 	@Around("execution(public * com.express.service.UserServiceImpl.doSignup(..)) || execution(public * com.express.service.UserServiceImpl.login(..))")
 	public Object passwordProcess(ProceedingJoinPoint point) throws Throwable {
 		Object[] args = point.getArgs();
-		if (args.length == 1) {
-			if (args[0] != null) {
-				String password=null;
-				String realPassword=null;
-				if (args[0] instanceof SignUpForm) {
-					SignUpForm user = (SignUpForm) args[0];
-					password = user.getPassword();
-					realPassword = makeMD5(password, realPassword);
-					user.setPassword(realPassword);
+				for (Object object : args) {
+					String password=null;
+					String realPassword=null;
+					if (object instanceof SignUpForm) {
+						SignUpForm user = (SignUpForm) object;
+						password = user.getPassword();
+						realPassword = makeMD5(password, realPassword);
+						user.setPassword(realPassword);
+					}
+					if (object instanceof LoginForm) {
+						LoginForm user = (LoginForm) object;
+						password = user.getPassword();
+						realPassword = makeMD5(password, realPassword);
+						user.setPassword(realPassword);
+					}
 				}
-				if (args[0] instanceof LoginForm) {
-					LoginForm user = (LoginForm) args[0];
-					password = user.getPassword();
-					realPassword = makeMD5(password, realPassword);
-					user.setPassword(realPassword);
-				}
-			}
-		}
 		Object proceed = point.proceed();
 		return proceed;
 	}

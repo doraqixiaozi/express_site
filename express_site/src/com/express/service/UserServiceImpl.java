@@ -32,17 +32,17 @@ public class UserServiceImpl implements UserService {
 	private MessageMapper messagemapper;
 
 	@Override
-	public void doSignup(SignUpForm user, MultipartFile multipartFile, HttpServletRequest request)
+	public void doSignup(SignUpForm user, MultipartFile avatr, HttpServletRequest request)
 			throws DataAccessException, IllegalStateException, IOException {		
 		String hostpath = request.getServletContext().getRealPath("/profile");
-		if (!multipartFile.getContentType().matches("image.+")) {
+		if (!avatr.getContentType().matches("image.+")) {
 			throw new IOException();
 		}
-		String filename = WebUtils.makeFilename(multipartFile.getOriginalFilename());
+		String filename = WebUtils.makeFilename(avatr.getOriginalFilename());
 		String realPath = WebUtils.makeRealPath(filename, hostpath);
 		String virtualPath = WebUtils.makeVirtualPath(filename);
 		File file = new File(realPath);
-		multipartFile.transferTo(file);
+		avatr.transferTo(file);
 		user.setProfile(virtualPath);
 		usermapper.addUser(user);
 	}

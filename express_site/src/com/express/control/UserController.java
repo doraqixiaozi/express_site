@@ -56,7 +56,7 @@ public class UserController {
 	}
 
 	@RequestMapping("/signin")
-	public @ResponseBody String signup(@Validated SignUpForm user, BindingResult result,MultipartFile multfile
+	public @ResponseBody String signup(@Validated SignUpForm user, BindingResult result,MultipartFile avatr
 ,HttpServletRequest request) {
 		if (result.hasErrors()) {
 			List<ObjectError> list = result.getAllErrors();
@@ -74,7 +74,7 @@ public class UserController {
 		}				
 		try {
 			try {
-				userService.doSignup(user,multfile,request);
+				userService.doSignup(user,avatr,request);
 			} catch (IllegalStateException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
