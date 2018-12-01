@@ -10,6 +10,20 @@ public class Message {
 	private String isread;
 	private Date m_time;
 
+	public Message() {
+		super();
+	}
+
+	public Message(Integer id, Integer to_id, Integer from_id, String text, String isread, Date m_time) {
+		super();
+		this.id = id;
+		this.to_id = to_id;
+		this.from_id = from_id;
+		this.text = text;
+		this.isread = isread;
+		this.m_time = m_time;
+	}
+
 	@Override
 	public String toString() {
 		return "Message [id=" + id + ", to_id=" + to_id + ", from_id=" + from_id + ", text=" + text + ", isread="

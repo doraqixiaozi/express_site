@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.express.mapper.MessageMapper">
-<select id="selectNewMessages" parameterType="Integer" resultType="Message">
-select * from message where (to_id=#{value} or from_id=#{value}) and isread='false' order by m_time
-</select>
+	<select id="selectNewMessages" parameterType="Integer"
+		resultType="Message">
+		select * from message where (to_id=#{value} or from_id=#{value}) and
+		isread='false' order by m_time
+	</select>
+
+	<insert id="addMessage" parameterType="Message">
+		insert into message(to_id,from_id,text,isread,m_time)
+		values(#{message.to_id},#{message.from_id},#{message.text},#{message.isread},#{message.m_time}
+	</insert>
+	
+	<update id="setHasRead" parameterType="Integer">
+	update message set isread='y' where to_id=#{id} and form_id=#{to_id}
+	</update>
 </mapper>

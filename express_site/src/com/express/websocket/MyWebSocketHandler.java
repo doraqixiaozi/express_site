@@ -1,27 +1,27 @@
 package com.express.websocket;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
-import org.springframework.web.socket.server.standard.SpringConfigurator;
 
-import com.express.service.UserService;
+
+import com.express.pojo.Message;
+import com.express.service.MessageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.websocket.server.ServerEndpoint;
+import javax.annotation.Resource;
 
 
 @Component
 public class MyWebSocketHandler implements WebSocketHandler{
 
-
-    @Autowired
-    private UserService userService;
-
+    @Resource
+    private MessageService messageService;
+    private static ObjectMapper objectMapper;
     //当MyWebSocketHandler类被加载时就会创建该Map，随类而生
     public static final Map<Integer, WebSocketSession> userSocketSessionMap;
 
@@ -32,7 +32,6 @@ public class MyWebSocketHandler implements WebSocketHandler{
     //握手实现连接后
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws Exception {
         int uid = (Integer) webSocketSession.getAttributes().get("uid");
-        System.out.println("userid="+uid);
         if (userSocketSessionMap.get(uid) == null) {
             userSocketSessionMap.put(uid, webSocketSession);
         }
@@ -44,15 +43,16 @@ public class MyWebSocketHandler implements WebSocketHandler{
         if(webSocketMessage.getPayloadLength()==0)return;
 
         //得到Socket通道中的数据并转化为Message对象
-       // Message msg=new Gson().fromJson(webSocketMessage.getPayload().toString(),Message.class);
-
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-       // msg.setMessageDate(now);
+       Message message = objectMapper.readValue(webSocketMessage.getPayload().toString(), Message.class);
+		Date date = new Date();
+		message.setM_time(date);
+		message.setIsread("n");
         //将信息保存至数据库
-       // youandmeService.addMessage(msg.getFromId(),msg.getFromName(),msg.getToId(),msg.getMessageText(),msg.getMessageDate());
-
-        //发送Socket信息
-       // sendMessageToUser(msg.getToId(), new TextMessage(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(msg)));
+        messageService.addMessage(message);
+        //发送Socket信息给双方
+        TextMessage msg=new TextMessage(objectMapper.writeValueAsString(message));
+        sendMessageToUser(message.getTo_id(), msg);
+        sendMessageToUser(message.getFrom_id(), msg);
     }
 
     public void handleTransportError(WebSocketSession webSocketSession, Throwable throwable) throws Exception {
@@ -88,7 +88,7 @@ public class MyWebSocketHandler implements WebSocketHandler{
 
     //发送信息的实现
     public void sendMessageToUser(int uid, TextMessage message)
-            throws IOException {
+            throws IOException {  	
         WebSocketSession session = userSocketSessionMap.get(uid);
         if (session != null && session.isOpen()) {
             session.sendMessage(message);
