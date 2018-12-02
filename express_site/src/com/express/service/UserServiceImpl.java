@@ -61,11 +61,11 @@ public class UserServiceImpl implements UserService {
 		List<Friend> friends2 = usermapper.selectFriendsByfId(user.getId());
 		friends.addAll(friends2);
 		List<Message> messages = messagemapper.selectNewMessages(user.getId());
-		// 为每个朋友添加消息
-		if (!friends.isEmpty() && !messages.isEmpty()) {
-			for (Friend friend : friends) {
+		// 为每个朋友添加消息		
+		if (!friends.isEmpty()) {
+			for (Friend friend : friends) {				
+				List<Message> list = new ArrayList<>();	
 				if (!messages.isEmpty()) {
-					List<Message> list = new ArrayList<>();
 					for (Message message : messages) {
 						/*
 						 * if (list==null) { list=new ArrayList<>(); }
@@ -75,10 +75,11 @@ public class UserServiceImpl implements UserService {
 						}
 					}
 					messages.removeAll(list);
-					friend.setMessages(list);
-				}
+				}	
+				friend.setMessages(list);
 			}
 		}
+		
 		result.setFriends(friends);
 		result.setUser(user);
 		return result;

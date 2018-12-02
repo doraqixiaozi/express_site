@@ -49,10 +49,8 @@ public class UserController {
 			login.setErrors(errors);
 			return login;
 		}
-		System.out.println(loginForm);
 		login = userService.login(loginForm);
 		session.setAttribute("user", login.getUser());
-		System.out.println(login);
 		return login;
 
 	}
@@ -129,7 +127,7 @@ public class UserController {
 				e.printStackTrace();
 				return "unkown error";
 			}	
-		Integer f_id = Integer.parseInt((String) readValue.get("id"));
+		Integer f_id = (Integer) readValue.get("id");
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
 			return "please login first";

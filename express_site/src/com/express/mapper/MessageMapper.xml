@@ -4,12 +4,12 @@
 	<select id="selectNewMessages" parameterType="Integer"
 		resultType="Message">
 		select * from message where (to_id=#{value} or from_id=#{value}) and
-		isread='false' order by m_time
+		isread='n' order by m_time
 	</select>
 
 	<insert id="addMessage" parameterType="Message">
 		insert into message(to_id,from_id,text,isread,m_time)
-		values(#{message.to_id},#{message.from_id},#{message.text},#{message.isread},#{message.m_time}
+		values(#{message.to_id},#{message.from_id},#{message.text},#{message.isread},#{message.m_time})
 	</insert>
 	
 	<update id="setHasRead" parameterType="Integer">

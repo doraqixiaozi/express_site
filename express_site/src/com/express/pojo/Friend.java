@@ -5,9 +5,14 @@ package com.express.pojo;
 * 类说明
 */
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Friend extends User {
+public class Friend extends User implements Serializable{
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1518625827140234794L;
 private List<Message> messages;
 
 public List<Message> getMessages() {

@@ -1,12 +1,8 @@
 package com.express.service;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.express.mapper.MessageMapper;
 import com.express.pojo.Message;
 
@@ -23,8 +19,7 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public void setHasRead(Integer id, Integer to_id) {
-		messagemapper.setHasRead(id,to_id);
-		
+		messagemapper.setHasRead(id,to_id);		
 	}
 
 }
