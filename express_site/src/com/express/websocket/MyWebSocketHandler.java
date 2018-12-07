@@ -3,15 +3,23 @@ package com.express.websocket;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
+import com.express.mapper.UserMapper;
+import com.express.pojo.Friend;
 import com.express.pojo.Message;
+import com.express.pojo.User;
 import com.express.service.MessageService;
+import com.express.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -20,6 +28,9 @@ public class MyWebSocketHandler implements WebSocketHandler {
 
 	@Resource
 	private MessageService messageService;
+	@Resource
+	private UserMapper userMapper;
+	
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	// 当MyWebSocketHandler类被加载时就会创建该Map，随类而生
 	public static final Map<Integer, WebSocketSession> userSocketSessionMap;
@@ -72,16 +83,31 @@ public class MyWebSocketHandler implements WebSocketHandler {
 	 * @param closeStatus
 	 * @throws Exception
 	 */
-	public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
-		System.out.println("WebSocket:" + webSocketSession.getAttributes().get("uid") + "close connection");
-		Iterator<Map.Entry<Integer, WebSocketSession>> iterator = userSocketSessionMap.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<Integer, WebSocketSession> entry = iterator.next();
-			if (entry.getValue().getAttributes().get("uid") == webSocketSession.getAttributes().get("uid")) {
-				userSocketSessionMap.remove(webSocketSession.getAttributes().get("uid"));
-				System.out.println("WebSocket in staticMap:" + webSocketSession.getAttributes().get("uid") + "removed");
+	public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus){
+		try {
+			System.out.println("WebSocket:" + webSocketSession.getAttributes().get("uid") + "close connection");
+		/*	Iterator<Map.Entry<Integer, WebSocketSession>> iterator = userSocketSessionMap.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry<Integer, WebSocketSession> entry = iterator.next();
+				if (entry.getValue().getAttributes().get("uid") == webSocketSession.getAttributes().get("uid")) {
+					userSocketSessionMap.remove(webSocketSession.getAttributes().get("uid"));
+					System.out.println("WebSocket in staticMap:" + webSocketSession.getAttributes().get("uid") + "removed");
+				}
+			}*/
+			Set<Entry<Integer, WebSocketSession>>  w_set= userSocketSessionMap.entrySet();
+			int uid=0;
+			for (Entry<Integer, WebSocketSession> entry : w_set) {
+				if (entry.getKey()==webSocketSession.getAttributes().get("uid")) {
+					uid=entry.getKey();					
+					break;
+				}
 			}
+			userSocketSessionMap.remove(uid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("出错");
 		}
+		
 	}
 
 	public boolean supportsPartialMessages() {
@@ -94,5 +120,29 @@ public class MyWebSocketHandler implements WebSocketHandler {
 		if (session != null && session.isOpen()) {
 			session.sendMessage(message);
 		}
+	}
+	
+	public void sendUserToFriends(int friendId,int userid) throws JsonProcessingException, IOException {
+		WebSocketSession session = userSocketSessionMap.get(friendId);
+		Friend friend = userMapper.selectFriendById(userid);
+		friend.setMessages(new ArrayList<Message>());
+		if (session != null && session.isOpen()) {
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(friend)));
+		}
+	}
+	
+	public void hello(int friendId,int userid) throws JsonProcessingException, IOException {
+		Message message = new Message(null, friendId, userid, "Hello,我们已经是朋友了,快来打个招呼吧", "n", new Date());
+		Message message2 = new Message(null, userid, friendId, "Hello,我们已经是朋友了,快来打个招呼吧", "n", new Date());
+		WebSocketSession u_session = userSocketSessionMap.get(userid);
+		WebSocketSession f_session = userSocketSessionMap.get(friendId);
+		if (f_session != null && f_session.isOpen()) {
+			f_session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+			messageService.addMessage(message);
+		}
+		if (u_session != null && u_session.isOpen()) {
+			u_session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message2)));
+			messageService.addMessage(message2);
+		}		
 	}
 }

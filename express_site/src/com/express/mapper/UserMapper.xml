@@ -37,12 +37,16 @@
 		</where>
 	</select>
 
-	<select id="selectUserByEmail" parameterType="String"
-		resultType="User">
+	<select id="selectFriendByEmail" parameterType="String"
+		resultType="Friend">
 		select id,email,name,sex,type,profile from user where email=#{value}
 	</select>
 
 	<insert id="makeFriends" parameterType="Integer">
 		insert into friend(s_id,f_id) values(#{s_id},#{f_id})
 	</insert>
+	
+	<select id="selectFriendById" parameterType="Integer" resultType="Friend">
+	select id,email,name,sex,type,profile from user where id=#{value}	
+	</select>
 </mapper>

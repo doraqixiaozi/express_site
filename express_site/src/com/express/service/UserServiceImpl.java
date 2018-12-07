@@ -22,6 +22,8 @@ import com.express.pojo.Message;
 import com.express.pojo.SignUpForm;
 import com.express.pojo.User;
 import com.express.util.WebUtils;
+import com.express.websocket.MyWebSocketHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 @Transactional
@@ -30,10 +32,12 @@ public class UserServiceImpl implements UserService {
 	private UserMapper usermapper;
 	@Resource
 	private MessageMapper messagemapper;
+	@Resource
+	MyWebSocketHandler webSocketHandler;
 
 	@Override
 	public void doSignup(SignUpForm user, MultipartFile avatr, HttpServletRequest request)
-			throws DataAccessException, IllegalStateException, IOException {		
+			throws DataAccessException, IllegalStateException, IOException {
 		String hostpath = request.getServletContext().getRealPath("/profile");
 		if (!avatr.getContentType().matches("image.+")) {
 			throw new IOException();
@@ -61,10 +65,10 @@ public class UserServiceImpl implements UserService {
 		List<Friend> friends2 = usermapper.selectFriendsByfId(user.getId());
 		friends.addAll(friends2);
 		List<Message> messages = messagemapper.selectNewMessages(user.getId());
-		// 为每个朋友添加消息		
+		// 为每个朋友添加消息
 		if (!friends.isEmpty()) {
-			for (Friend friend : friends) {				
-				List<Message> list = new ArrayList<>();	
+			for (Friend friend : friends) {
+				List<Message> list = new ArrayList<>();
 				if (!messages.isEmpty()) {
 					for (Message message : messages) {
 						/*
@@ -75,11 +79,11 @@ public class UserServiceImpl implements UserService {
 						}
 					}
 					messages.removeAll(list);
-				}	
+				}
 				friend.setMessages(list);
 			}
 		}
-		
+
 		result.setFriends(friends);
 		result.setUser(user);
 		return result;
@@ -94,14 +98,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User searchfriend(String email) {
-		return usermapper.selectUserByEmail(email);
+	public Friend searchfriend(String email) {
+		 Friend friend = usermapper.selectFriendByEmail(email);
+		 friend.setMessages(new ArrayList<>());
+		 return friend;
 	}
 
 	@Override
-	public void makeFriends(Integer s_id, Integer f_id) {
+	public void makeFriends(Integer s_id, Integer f_id) throws JsonProcessingException, IOException {
 		usermapper.makeFriends(s_id, f_id);
-		System.out.println("sid=" + s_id + " fid=" + f_id);
+        webSocketHandler.sendUserToFriends(f_id,s_id);
+        webSocketHandler.hello(f_id,s_id);
 	}
 
 }

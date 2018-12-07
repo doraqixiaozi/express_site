@@ -13,6 +13,6 @@
 	</insert>
 	
 	<update id="setHasRead" parameterType="Integer">
-	update message set isread='y' where to_id=#{id} and form_id=#{to_id}
+	update message set isread='y' where to_id=#{id} and from_id=#{to_id}
 	</update>
 </mapper>

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,8 @@ public class MessageController {
 
 	// 进入或离开页面会触发使接收人为用户自己的消息为已读
 	@RequestMapping("/hasread")
-	public @ResponseBody String hasread(@RequestBody String json_id, HttpSession session) {
+	public @ResponseBody String hasread(@RequestBody String json_id, HttpSession session
+			) {
 		if (json_id == null || json_id.trim().equals("")) {
 			return "please put the id";
 		}
@@ -38,12 +41,12 @@ public class MessageController {
 			e.printStackTrace();
 			return "unkown error";
 		}
-		Integer to_id = Integer.parseInt((String) readValue.get("id"));
+		Integer to_id = (int) readValue.get("id");
 		User user = (User) session.getAttribute("user");
-		if (user == null||to_id==null) {
+		if (user == null || to_id == null) {
 			return "unkown error";
 		}
-		messageService.setHasRead(user.getId(),to_id);
+		messageService.setHasRead(user.getId(), to_id);
 		return "success";
 	}
 }

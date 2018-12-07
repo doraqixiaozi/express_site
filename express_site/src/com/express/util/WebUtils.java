@@ -16,8 +16,9 @@ public class WebUtils {
 	public static String makeRealPath(String filename, String hostpath) {
 		int hashcode = filename.hashCode();
 		int dir1 = hashcode & 0xf;
-		int dir2 = (hashcode & 0xf0) >> 4;
-		String realPath = hostpath + "\\" + dir1 + "\\" + dir2+"\\"+filename;
+		int dir2 = (hashcode & 0xf0) >> 4;		
+		//文件上传分隔符问题
+		String realPath = hostpath + System.getProperty("file.separator") + dir1 + System.getProperty("file.separator") + dir2+System.getProperty("file.separator")+filename;
 		File file=new File(realPath);
 		if(!file.exists()) {
 			file.mkdirs();

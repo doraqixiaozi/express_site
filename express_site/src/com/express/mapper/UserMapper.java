@@ -17,6 +17,7 @@ public List<Friend> selectFriendsBysId(Integer id);
 public User login(LoginForm loginForm);
 public List<String> getSimilarEmail(String email);
 public List<Friend> selectFriendsByfId(Integer id);
-public User selectUserByEmail(String email);
+public Friend selectFriendByEmail(String email);
 public void makeFriends(@Param("s_id") Integer s_id,@Param("f_id") Integer f_id);
+public Friend selectFriendById(Integer id);
 }

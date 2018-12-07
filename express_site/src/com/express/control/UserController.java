@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.dao.DataAccessException;
@@ -19,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.express.pojo.Friend;
 import com.express.pojo.LoginForm;
 import com.express.pojo.LoginResult;
 import com.express.pojo.SignUpForm;
 import com.express.pojo.User;
 import com.express.service.MessageService;
 import com.express.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -37,7 +41,7 @@ public class UserController {
 
 	@RequestMapping("/login")
 	public @ResponseBody LoginResult login(@Validated @RequestBody LoginForm loginForm, BindingResult result,
-			HttpSession session) {
+			HttpSession session, HttpServletResponse response) {
 		List<String> errors = new ArrayList<>();
 		LoginResult login = new LoginResult();
 		if (result.hasErrors()) {
@@ -51,8 +55,15 @@ public class UserController {
 		}
 		login = userService.login(loginForm);
 		session.setAttribute("user", login.getUser());
+		Cookie e_cookie = new Cookie("email", loginForm.getEmail());
+		Cookie p_cookie = new Cookie("password", loginForm.getPassword());
+		e_cookie.setMaxAge(60 * 60 * 24 * 30);
+		e_cookie.setPath(session.getServletContext().getContextPath());
+		response.addCookie(e_cookie);
+		p_cookie.setMaxAge(60 * 60 * 24 * 30);
+		p_cookie.setPath(session.getServletContext().getContextPath());
+		response.addCookie(p_cookie);
 		return login;
-
 	}
 
 	@RequestMapping("/signin")
@@ -91,11 +102,11 @@ public class UserController {
 
 	@RequestMapping("/similarEmail")
 	public @ResponseBody List<String> getSimilarEmail(@RequestBody String json_email) {
-		Map readValue=null;
+		Map readValue = null;
 		try {
 			readValue = mapper.readValue(json_email, Map.class);
 		} catch (IOException e) {
-			return null;		
+			return null;
 		}
 		String email = (String) readValue.get("email");
 		List<String> similarEmail = userService.getSimilarEmail(email);
@@ -103,30 +114,30 @@ public class UserController {
 	}
 
 	@RequestMapping("/searchfriend")
-	public @ResponseBody User searchfriend(@RequestBody String json_email) {
-		Map readValue=null;
+	public @ResponseBody Friend searchfriend(@RequestBody String json_email) {
+		Map readValue = null;
 		try {
 			readValue = mapper.readValue(json_email, Map.class);
 		} catch (IOException e) {
-			return null;		
+			return null;
 		}
 		String email = (String) readValue.get("email");
-		User user = userService.searchfriend(email);
-		return user;
+		Friend friend = userService.searchfriend(email);
+		return friend;
 	}
 
 	@RequestMapping("/addfriend")
-	public @ResponseBody String addfriend(@RequestBody String json_id, HttpSession session){
-		if (json_id == null||json_id.trim().equals("")) {
+	public @ResponseBody String addfriend(@RequestBody String json_id, HttpSession session) {
+		if (json_id == null || json_id.trim().equals("")) {
 			return "please put the userid";
 		}
-		Map readValue;		
-			try {
-				readValue = mapper.readValue(json_id, Map.class);
-			} catch (IOException e) {
-				e.printStackTrace();
-				return "unkown error";
-			}	
+		Map readValue;
+		try {
+			readValue = mapper.readValue(json_id, Map.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "unkown error";
+		}
 		Integer f_id = (Integer) readValue.get("id");
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
@@ -136,9 +147,13 @@ public class UserController {
 		if (s_id == f_id) {
 			return "you can not add yourself as friend";
 		}
-		userService.makeFriends(s_id, f_id);
+		try {
+			userService.makeFriends(s_id, f_id);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "unkown error";
+		}
 		return "success";
 	}
 
-	
 }
